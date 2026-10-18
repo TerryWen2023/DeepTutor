@@ -1,0 +1,103 @@
+{
+  "name": "wenxi-learning",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "温习：面向小学、初中和高中的 AI 学习伙伴",
+  "engines": { "node": ">=22.12.0" },
+  "author": "温习",
+  "license": "Apache-2.0",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "desktop": "electron .",
+    "build": "vite build",
+    "test": "node --test tests/*.test.*",
+    "prepare:codex": "node scripts/prepare-codex.cjs",
+    "dist:win": "npm run build && npm run prepare:codex && electron-builder --win nsis --x64",
+    "pack:win": "npm run build && npm run prepare:codex && electron-builder --win dir --x64"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.11",
+    "katex": "0.19.0",
+    "lucide-react": "0.562.0",
+    "pdfjs-dist": "6.4.299",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-markdown": "10.1.0",
+    "rehype-katex": "7.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-math": "6.0.0"
+  },
+  "devDependencies": {
+    "@openai/codex": "0.163.0",
+    "@playwright/test": "1.56.1",
+    "@vitejs/plugin-react": "4.7.0",
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3",
+    "sharp": "0.34.5",
+    "vite": "6.4.4"
+  },
+  "overrides": {
+    "katex": "$katex"
+  },
+  "build": {
+    "electronDist": "node_modules/electron/dist",
+    "appId": "cn.wenxi.learning",
+    "productName": "温习",
+    "copyright": "Copyright © 2026 温习 contributors",
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "shared/**/*",
+      "assets/icon.png",
+      "package.json",
+      "README.md",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor/codex",
+        "to": "codex",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Wenxi-Setup-${version}-x64.${ext}",
+      "signAndEditExecutable": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "温习",
+      "installerLanguages": [
+        "zh_CN",
+        "en_US"
+      ],
+      "language": "2052",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
